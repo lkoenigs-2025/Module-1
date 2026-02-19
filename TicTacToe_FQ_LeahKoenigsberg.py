@@ -90,38 +90,37 @@ def player(board, player_wins, player2_wins, tie):
 #input validation function
 def validate_input(board, i):
   comma = ','
-  
-  print('\nPlayer',i,': \nPlease enter a number from 0 to 2 for a row and column: ',end = '')
-  rws_cols = input('(Hint: row #, comma and then the column #) ')
-  rw = rws_cols.split(",")
-  cls = rw[0]
-  rws = rw[1]
 
-  #call function to change 
-  tpl = change_int(rws,cls)
-
-  #Input validation: if user enters one number or doesnt put a comma:
-  while comma not in rws_cols or len(rws_cols) > 4 or tpl[0] > 2 or tpl[0] < 0 or tpl[1] > 2 or tpl[1] < 0 or board[tpl[0]][tpl[1]] == 'X' or board[tpl[0]][tpl[1]] == 'O':
-    #if input is greater than 2 or less than 0
-    if comma not in rws_cols or len(rws_cols) > 4 or tpl[0] > 2 or tpl[0] < 0 or tpl[1] >2 or tpl[1] <0:
+  while True:
+    print('\nPlayer',i,': \nPlease enter a number from 0 to 2 for a row and column: ',end = '')
+    rws_cols = input('(Hint: row #, comma and then the column #) ')
+    if comma not in rws_cols or len(rws_cols) > 3:
       print('\nInput must be two numbers from 0-2 separated by a comma.')
-      
-    #spot on board taken
-    else:
-      print('\nThis spot is already taken.')
-
-    #ask user for new coordinates
-    rws_cols = input('Enter a number from 0-2 for a row and column separated by a comma: (Hint: row #, comma and then the column #) ')     
-
-    #split users answer by the comma
+      continue
     rw = rws_cols.split(",")
-    cls = rw[0]
-    rws = rw[1]
+    rws = rw[0]
+    cls = rw[1]
 
     #call function to change 
     tpl = change_int(rws,cls)
 
-  return tpl   
+    #if tpl false print message
+    if tpl == False:
+      print('\nInput must be two numbers from 0-2.')
+      continue
+
+    #if tpl greater than or less than
+    if tpl[0] > 2 or tpl[0] < 0 or tpl[1] > 2 or tpl[1] < 0:
+      print('\nInput must be two numbers from 0-2.')
+      continue
+
+    #spot taken on board
+    if board[tpl[0]][tpl[1]] != '-':
+      print('\nThis spot is already taken.')
+      continue
+
+    #stop loop and return tpl if all good
+    return tpl
 
 #function that changes to integer
 def change_int(rws,cls):
@@ -130,7 +129,7 @@ def change_int(rws,cls):
     tpl = (int(rws), int(cls))
     return tpl
   except ValueError:
-    print('Error.')
+    return False
   
 #function to determine if player won game
 def win_game(board, taken, player_wins, player2_wins, tie):
@@ -179,11 +178,11 @@ def win_game(board, taken, player_wins, player2_wins, tie):
       game = 1
 
 
-    #put variables down to 0
-    row1 = 0
-    row2 = 0
-    col1 = 0
-    col2 = 0
+  #put variables down to 0
+  row1 = 0
+  row2 = 0
+  col1 = 0
+  col2 = 0
 
   #if 'X' is found in all three places, player one got a row diagonally!
   if (board[0][0] == 'X' and board[1][1] == 'X' and board[2][2] == 'X') or (board[0][2] == 'X' and board[1][1] == 'X' and board[2][0] == 'X'):
